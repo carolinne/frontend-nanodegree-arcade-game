@@ -79,7 +79,27 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+        
+    }
+
+    function checkCollisions() {
+        var collide = false;
+
+        allEnemies.forEach(function(enemy) {
+            if (
+                player.x < enemy.x + 60 &&
+                player.x + 37 > enemy.x &&
+                player.y < enemy.y + 25 &&
+                30 + player.y > enemy.y
+            ) { 
+                collide = true; return; 
+            }
+        });
+        
+        if (collide) {
+            reset();
+        }
     }
 
     /* This is called by the update function and loops through all of the
@@ -103,6 +123,9 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
+        // limpa o lixo do canvas antes de um render novo.
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
@@ -151,14 +174,28 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        checkWin();
+    }
+
+    function checkWin() {
+        setTimeout(() => {
+            if (player.y === -20) {
+                alert("You win!");
+                reset();
+            }
+        },1000)
+
     }
 
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
+     * Esta função não faz nada, mas poderia ter sido um bom lugar para lidar com os estados de reinício do jogo - talvez um novo menu de jogo ou um jogo sobre tela desses tipos de coisas. É chamado apenas uma vez pelo método init ().
      */
     function reset() {
-        // noop
+        player.x = player.initialX;
+        player.y = player.initialY;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -170,7 +207,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-pink-girl.png'
     ]);
     Resources.onReady(init);
 
