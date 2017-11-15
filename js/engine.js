@@ -80,9 +80,11 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
-        
     }
 
+    // Verifica se existe colisão entre algum inimigo e o jogador, resetando o jogo se houver colisão.
+    // Partindo do princípio da responsabilidade única,
+    // não achei que fosse de responsabilidade do inimigo ou do jogador detectar as colisões, e sim da engine.
     function checkCollisions() {
         var collide = false;
 
@@ -123,7 +125,7 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
-        // limpa o lixo do canvas antes de um render novo.
+        // Limpa o lixo do canvas antes de um novo render.
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         
         /* This array holds the relative URL to the image used
@@ -178,13 +180,16 @@ var Engine = (function(global) {
         checkWin();
     }
 
+    // Verifica se o jogador chegou na água.
     function checkWin() {
+        // Aguarda 1 segundo antes de exibir o alerta, pra dar tempo de renderizar a nova posição final do jogador
+        // (que é quando ele chega na água).
         setTimeout(() => {
             if (player.y === -20) {
                 alert("You win!");
                 reset();
             }
-        },1000)
+        }, 1000)
 
     }
 
@@ -194,6 +199,7 @@ var Engine = (function(global) {
      * Esta função não faz nada, mas poderia ter sido um bom lugar para lidar com os estados de reinício do jogo - talvez um novo menu de jogo ou um jogo sobre tela desses tipos de coisas. É chamado apenas uma vez pelo método init ().
      */
     function reset() {
+        // Reseta a posição do jogador para a posição inicial.
         player.x = player.initialX;
         player.y = player.initialY;
     }
